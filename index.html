@@ -5,38 +5,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clinic Connect - Cleveland Clinic</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Font: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js for Analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --cc-blue: #005A9C;
-            --cc-blue-light: #e0eefc;
-            --bg-base: #f3f4f6;
+            --cc-primary: #004a9e; /* A more modern, deep Cleveland Clinic blue */
+            --cc-primary-light: #e6f0f8;
+            --cc-primary-text: #003a7c;
+            --bg-main: #f7f9fc;
+            --bg-sidebar: #ffffff;
             --bg-card: #ffffff;
-            --text-primary: #111827;
-            --text-secondary: #4b5563;
-            --text-tertiary: #6b7280;
-            --border-color: #e5e7eb;
+            --bg-hover: #f1f5f9;
+            --text-primary: #1a202c;
+            --text-secondary: #5A657D;
+            --text-tertiary: #8a94a6;
+            --border-color: #eaedf1;
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-base);
+            background-color: var(--bg-main);
             margin: 0;
             padding: 0;
             overflow: hidden;
             color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         /* Main Application Layout */
         #app-container {
             display: grid;
-            grid-template-columns: 280px 1fr;
-            grid-template-rows: 65px 1fr;
+            grid-template-columns: 260px 1fr;
+            grid-template-rows: 64px 1fr;
             grid-template-areas:
                 "sidebar header"
                 "sidebar main";
@@ -47,33 +56,33 @@
         /* --- Sidebar --- */
         .sidebar {
             grid-area: sidebar;
-            background-color: var(--bg-card);
+            background-color: var(--bg-sidebar);
             border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
-            padding: 24px;
+            padding: 16px;
         }
 
         .sidebar-logo {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding-bottom: 24px;
-            border-bottom: 1px solid var(--border-color);
+            gap: 10px;
+            padding: 12px 16px;
+            margin-bottom: 24px;
         }
 
         .sidebar-logo-icon {
-            font-size: 28px;
-            color: var(--cc-blue);
+            font-size: 24px;
+            color: var(--cc-primary);
         }
         
         .sidebar-logo-text {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
+            color: var(--text-primary);
         }
 
         .sidebar-nav {
-            margin-top: 24px;
             flex-grow: 1;
             overflow-y: auto;
         }
@@ -84,66 +93,69 @@
             margin: 0;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 4px;
         }
         
         .sidebar-nav-header {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             color: var(--text-tertiary);
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            padding: 8px 12px;
-            margin-top: 16px;
+            padding: 16px 16px 8px;
         }
 
         .sidebar-nav-link {
             display: flex;
             align-items: center;
-            padding: 10px 12px;
+            padding: 12px 16px;
             border-radius: 8px;
             font-weight: 500;
+            font-size: 15px;
             color: var(--text-secondary);
             text-decoration: none;
             transition: all 0.2s ease-in-out;
             cursor: pointer;
+            border-left: 4px solid transparent;
         }
 
         .sidebar-nav-link i {
             width: 20px;
-            margin-right: 12px;
+            margin-right: 16px;
             font-size: 16px;
             color: var(--text-tertiary);
             transition: color 0.2s ease-in-out;
         }
 
         .sidebar-nav-link:hover {
-            background-color: var(--bg-base);
+            background-color: var(--bg-hover);
             color: var(--text-primary);
         }
         
         .sidebar-nav-link.active {
-            background-color: var(--cc-blue-light);
-            color: var(--cc-blue);
+            background-color: var(--cc-primary-light);
+            color: var(--cc-primary-text);
             font-weight: 600;
+            border-left: 4px solid var(--cc-primary);
         }
         
         .sidebar-nav-link.active i {
-            color: var(--cc-blue);
+            color: var(--cc-primary);
         }
 
         .sidebar-user {
             margin-top: auto;
-            padding-top: 24px;
+            padding-top: 16px;
             border-top: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             gap: 12px;
+            padding: 16px 4px 0 4px;
         }
 
         .sidebar-user img {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
         }
 
@@ -153,19 +165,20 @@
 
         .sidebar-user-name {
             font-weight: 600;
+            font-size: 14px;
         }
 
         .sidebar-user-title {
-            font-size: 14px;
+            font-size: 12px;
             color: var(--text-tertiary);
         }
 
         /* --- Header --- */
         .header {
             grid-area: header;
-            background-color: var(--bg-card);
+            background-color: var(--bg-sidebar);
             border-bottom: 1px solid var(--border-color);
-            padding: 0 40px;
+            padding: 0 32px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -176,7 +189,7 @@
         }
         
         .header-search input {
-            background-color: var(--bg-base);
+            background-color: var(--bg-main);
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 9px 16px 9px 40px;
@@ -187,9 +200,9 @@
         
         .header-search input:focus {
             outline: none;
-            border-color: var(--cc-blue);
-            background-color: var(--bg-card);
-            box-shadow: 0 0 0 2px rgba(0, 90, 156, 0.2);
+            border-color: var(--cc-primary);
+            background-color: var(--bg-sidebar);
+            box-shadow: 0 0 0 3px rgba(0, 74, 158, 0.1);
         }
         
         .header-search i {
@@ -208,7 +221,7 @@
         }
         
         .header-icon-btn {
-            font-size: 20px;
+            font-size: 18px;
             color: var(--text-tertiary);
             cursor: pointer;
             transition: color 0.2s ease-in-out;
@@ -222,18 +235,18 @@
             width: 32px;
             height: 32px;
             border-radius: 50%;
+            cursor: pointer;
         }
 
         /* --- Main Content Area --- */
         .main {
             grid-area: main;
-            overflow: hidden; /* Main content does not scroll */
-            background-color: var(--bg-base);
+            overflow: hidden;
+            background-color: var(--bg-main);
         }
 
-        /* --- All Views (Pages) --- */
         .view {
-            display: none; /* Hidden by default */
+            display: none;
             height: 100%;
             width: 100%;
             overflow: hidden;
@@ -246,20 +259,20 @@
         /* --- Patient Huddle View (#patient-view) --- */
         #patient-view {
             display: none;
-            grid-template-columns: 320px 1fr 340px;
+            grid-template-columns: 300px 1fr 320px;
             grid-template-rows: 1fr;
-            height: calc(100vh - 65px); /* Full height minus header */
+            height: calc(100vh - 64px); /* Full height minus header */
             gap: 0;
-            background-color: var(--bg-base);
+            background-color: var(--bg-main);
         }
         
         #patient-view.active {
             display: grid;
         }
         
-        /* Patient List (Column 1) */
+        /* Patient List (Col 1) */
         .patient-list-col {
-            background-color: var(--bg-card);
+            background-color: var(--bg-sidebar);
             border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
@@ -267,20 +280,23 @@
         }
         
         .patient-list-header {
-            padding: 20px;
+            padding: 20px 24px;
             border-bottom: 1px solid var(--border-color);
             flex-shrink: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .patient-list-header h2 {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
         }
         
         .patient-list {
             overflow-y: auto;
             flex-grow: 1;
-            padding: 16px;
+            padding: 8px;
         }
         
         .patient-card {
@@ -291,19 +307,21 @@
             border-radius: 8px;
             cursor: pointer;
             transition: background-color 0.2s ease-in-out;
+            border: 1px solid transparent;
         }
         
         .patient-card:hover {
-            background-color: #f9fafb;
+            background-color: var(--bg-hover);
         }
         
         .patient-card.selected {
-            background-color: var(--cc-blue-light);
+            background-color: var(--cc-primary-light);
+            border-color: #b9d7f6;
         }
         
         .patient-card .status-dot {
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             flex-shrink: 0;
         }
@@ -323,25 +341,31 @@
         
         .patient-card-name {
             font-weight: 600;
+            font-size: 15px;
+            color: var(--text-primary);
+        }
+        
+        .patient-card.selected .patient-card-name {
+            color: var(--cc-primary-text);
         }
         
         .patient-card-details {
-            font-size: 14px;
-            color: var(--text-tertiary);
+            font-size: 13px;
+            color: var(--text-secondary);
         }
         
-        /* Patient Huddle (Column 2) */
+        /* Patient Huddle (Col 2) */
         .huddle-col {
             display: flex;
             flex-direction: column;
             height: 100%;
-            background-color: #f9fafb;
+            background-color: var(--bg-main);
         }
         
         .huddle-header {
-            padding: 20px 24px;
+            padding: 16px 24px;
             border-bottom: 1px solid var(--border-color);
-            background-color: var(--bg-card);
+            background-color: var(--bg-sidebar);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -355,7 +379,7 @@
         }
 
         .huddle-header-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
         }
         
@@ -363,17 +387,19 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background-color: #fefcbf;
-            color: #713f12;
+            background-color: #fefce8;
+            color: #a16207;
             font-weight: 600;
             font-size: 12px;
             padding: 4px 10px;
             border-radius: 9999px;
+            border: 1px solid #fef08a;
         }
 
         .huddle-header-status.stable {
             background-color: #f0fdf4;
-            color: #15803d;
+            color: #166534;
+            border-color: #bbf7d0;
         }
         
         .huddle-feed {
@@ -384,10 +410,51 @@
             flex-direction: column;
             gap: 20px;
         }
+        
+        /* Refined Placeholder */
+        #huddle-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            color: var(--text-tertiary);
+        }
+        
+        #huddle-placeholder i {
+            font-size: 48px;
+            color: var(--cc-primary-light);
+            background-color: var(--cc-primary);
+            padding: 24px;
+            border-radius: 50%;
+            margin-bottom: 24px;
+        }
+        
+        #huddle-placeholder h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        #huddle-placeholder p {
+            font-size: 15px;
+            max-width: 300px;
+            margin-top: 8px;
+            line-height: 1.6;
+        }
 
+        /* Refined Chat Bubbles */
         .feed-item {
             display: flex;
             gap: 12px;
+            max-width: 85%;
+            align-self: flex-start;
+        }
+        
+        .feed-item.current-user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
         }
         
         .feed-item img {
@@ -395,6 +462,7 @@
             height: 36px;
             border-radius: 50%;
             flex-shrink: 0;
+            margin-top: 4px;
         }
         
         .feed-item-content {
@@ -405,11 +473,16 @@
             display: flex;
             align-items: baseline;
             gap: 8px;
+            margin-bottom: 6px;
+        }
+        
+        .feed-item.current-user .feed-item-header {
+            justify-content: flex-end;
         }
         
         .feed-item-name {
             font-weight: 600;
-            font-size: 15px;
+            font-size: 14px;
         }
         
         .feed-item-time {
@@ -418,19 +491,26 @@
         }
         
         .feed-item-message {
-            margin-top: 4px;
             font-size: 15px;
             line-height: 1.6;
-            color: var(--text-secondary);
+            color: var(--text-primary);
             background-color: var(--bg-card);
             padding: 12px 16px;
             border: 1px solid var(--border-color);
-            border-radius: 0 12px 12px 12px;
+            border-radius: 12px 12px 12px 0;
+        }
+        
+        .feed-item.current-user .feed-item-message {
+            background-color: var(--cc-primary);
+            color: white;
+            border: none;
+            border-radius: 12px 12px 0 12px;
         }
         
         .feed-item.system {
+            max-width: 100%;
             align-items: center;
-            gap: 16px;
+            gap: 12px;
         }
 
         .feed-item.system .feed-item-icon {
@@ -447,18 +527,23 @@
             font-style: italic;
         }
         
-        .feed-item-message .mention {
-            background-color: var(--cc-blue-light);
-            color: var(--cc-blue);
+        .mention {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
             font-weight: 600;
             padding: 2px 6px;
             border-radius: 4px;
+        }
+        
+        .feed-item:not(.current-user) .mention {
+             background-color: var(--cc-primary-light);
+            color: var(--cc-primary-text);
         }
 
         .huddle-input {
             padding: 16px 24px;
             border-top: 1px solid var(--border-color);
-            background-color: var(--bg-card);
+            background-color: #f9fafb;
             flex-shrink: 0;
         }
 
@@ -468,39 +553,46 @@
 
         .huddle-input-box textarea {
             width: 100%;
-            min-height: 70px;
+            min-height: 48px;
+            max-height: 200px;
             padding: 12px 16px;
             padding-right: 50px;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--border-color);
             border-radius: 12px;
             resize: vertical;
             font-size: 15px;
+            background-color: var(--bg-card);
         }
         
         .huddle-input-box textarea:focus {
-            outline: 2px solid var(--cc-blue);
-            border-color: var(--cc-blue);
+            outline: none;
+            border-color: var(--cc-primary);
+            box-shadow: 0 0 0 3px rgba(0, 74, 158, 0.1);
         }
         
         .huddle-input-button {
             position: absolute;
-            bottom: 12px;
-            right: 12px;
-            width: 36px;
-            height: 36px;
+            bottom: 8px;
+            right: 8px;
+            width: 32px;
+            height: 32px;
             border-radius: 8px;
-            background-color: var(--cc-blue);
+            background-color: var(--cc-primary);
             color: white;
             border: none;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: background-color 0.2s;
+        }
+        .huddle-input-button:hover {
+            background-color: #003a7c;
         }
         
-        /* Context Column (Column 3) */
+        /* Context Column (Col 3) */
         .context-col {
-            background-color: var(--bg-card);
+            background-color: var(--bg-sidebar);
             border-left: 1px solid var(--border-color);
             height: 100%;
             overflow-y: auto;
@@ -511,24 +603,20 @@
         }
         
         .info-card {
-            background-color: var(--bg-base);
             border-radius: 12px;
             border: 1px solid var(--border-color);
+            background-color: var(--bg-card);
             overflow: hidden;
         }
         
         .info-card-header {
             padding: 16px 20px;
             border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #f9fafb;
         }
         
         .info-card-title {
             font-size: 16px;
-            font-weight: 700;
+            font-weight: 600;
         }
         
         .info-card-content {
@@ -536,8 +624,34 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
-            background-color: var(--bg-card);
         }
+        
+        /* Patient Vitals */
+        .vitals-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .vitals-item {
+            line-height: 1.3;
+        }
+        .vitals-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .vitals-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .vitals-value.critical {
+            color: #ef4444;
+        }
+        .vitals-value.normal {
+            color: #22c55e;
+        }
+
 
         .team-member {
             display: flex;
@@ -557,10 +671,11 @@
         
         .team-member-name {
             font-weight: 600;
+            font-size: 15px;
         }
         
         .team-member-role {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-secondary);
         }
         
@@ -582,59 +697,33 @@
             gap: 8px;
             width: 100%;
             padding: 10px;
-            border: 1px dashed #d1d5db;
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             font-weight: 600;
             font-size: 14px;
             color: var(--text-secondary);
             cursor: pointer;
             transition: all 0.2s ease-in-out;
+            background-color: var(--bg-hover);
         }
         
         .add-team-button:hover {
-            background-color: #f3f4f6;
-            border-color: #9ca3af;
-        }
-        
-        .resource-form label {
-            display: block;
-            font-weight: 600;
-            font-size: 14px;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-        }
-        
-        .resource-form select,
-        .resource-form button {
-            width: 100%;
-            padding: 10px 12px;
-            border-radius: 8px;
-            border: 1px solid #d1d5db;
-            background-color: var(--bg-card);
-            font-size: 14px;
-        }
-
-        .resource-form button {
-            margin-top: 16px;
-            background-color: #10b981;
-            color: white;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
+            background-color: #e2e8f0;
+            border-color: #cbd5e1;
         }
         
         /* --- Generic View (for Dashboard, Directory, etc.) --- */
         .generic-view {
-            padding: 40px;
-            height: calc(100vh - 65px); /* Full height minus header */
+            padding: 32px 40px;
+            height: calc(100vh - 64px); /* Full height minus header */
             overflow-y: auto;
         }
         
         .generic-view-header {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 32px;
+            margin-bottom: 24px;
         }
         
         /* Directory Card */
@@ -649,7 +738,7 @@
             border-radius: 12px;
             border: 1px solid var(--border-color);
             padding: 24px;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
             transition: all 0.2s ease-in-out;
         }
         
@@ -675,7 +764,7 @@
         }
         
         .team-card-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
         }
         
@@ -688,12 +777,12 @@
         
         .team-card-footer {
             margin-top: 20px;
-            padding-top: 20px;
+            padding-top: 16px;
             border-top: 1px solid var(--border-color);
         }
 
         .team-card-footer-title {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             color: var(--text-tertiary);
             text-transform: uppercase;
@@ -707,11 +796,52 @@
         }
 
         /* --- Dashboard Widgets --- */
-        .dashboard-grid {
+        .dashboard-grid-kpi {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 24px;
             margin-bottom: 24px;
+        }
+        
+        .kpi-card {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
+        }
+        
+        .kpi-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .kpi-card-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .kpi-card-trend {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        .kpi-card-trend.positive { color: #16a34a; }
+        .kpi-card-trend.negative { color: #ef4444; }
+        
+        .dashboard-grid-main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
         }
         
         .dashboard-widget {
@@ -719,20 +849,14 @@
             border-radius: 12px;
             border: 1px solid var(--border-color);
             padding: 24px;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
         }
         
         .dashboard-widget-title {
             font-size: 16px;
             font-weight: 600;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .dashboard-widget-content {
-            margin-top: 20px;
+            color: var(--text-primary);
+            margin-bottom: 20px;
         }
         
         .task-list {
@@ -751,19 +875,30 @@
         }
 
         .task-item i {
-            color: var(--cc-blue);
+            color: var(--text-tertiary);
             cursor: pointer;
+            font-size: 18px;
+        }
+        .task-item i:hover { color: var(--cc-primary); }
+
+        .task-item.completed span {
+            text-decoration: line-through;
+            color: var(--text-tertiary);
         }
         
         .alert-item {
             display: flex;
             gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            background-color: var(--bg-hover);
         }
         
         .alert-item i {
             margin-top: 5px;
             color: #ef4444; /* Red */
         }
+        .alert-item.info i { color: #3b82f6; /* Blue */ }
         
         .alert-info {
             line-height: 1.5;
@@ -777,41 +912,13 @@
             color: var(--text-secondary);
         }
         
-        .metric-card {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 16px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .metric-card:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-        .metric-icon {
-            font-size: 20px;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .metric-value {
-            font-size: 28px;
-            font-weight: 700;
-        }
-        .metric-label {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
         .dashboard-chart-container {
             background-color: var(--bg-card);
             border-radius: 12px;
             border: 1px solid var(--border-color);
             padding: 24px;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
+            grid-column: 1 / -1;
             height: 350px;
         }
         
@@ -826,7 +933,7 @@
             background-color: var(--bg-card);
             border-radius: 12px;
             border: 1px solid var(--border-color);
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
         }
         
         .resource-card-header {
@@ -850,14 +957,18 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border-color);
+            padding: 16px;
+            border-radius: 8px;
+            background-color: var(--bg-hover);
+            border: 1px solid var(--border-color);
         }
-        .resource-item:last-child { border-bottom: none; }
         
         .resource-name {
             font-size: 15px;
             font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         .resource-status {
@@ -868,16 +979,31 @@
         .resource-status.strained { color: #f59e0b; }
         .resource-status.capacity { color: #ef4444; }
         
-        .resource-request-item {
+        .request-item {
             font-size: 15px;
             color: var(--text-secondary);
+            padding: 16px;
+            border-radius: 8px;
+            background-color: var(--bg-hover);
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .resource-request-item strong {
+        .request-item strong {
             color: var(--text-primary);
         }
-        .resource-request-item .status {
-            font-style: italic;
-            color: var(--cc-blue);
+        .request-item .status {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+        .request-item .status.pending {
+            background-color: #fefce8;
+            color: #a16207;
         }
 
         /* --- Analytics View --- */
@@ -891,8 +1017,8 @@
             border-radius: 12px;
             border: 1px solid var(--border-color);
             padding: 24px;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
-            height: 400px; /* Give charts a fixed height */
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
+            height: 400px;
         }
         .analytics-chart-container.full-width {
             grid-column: 1 / -1;
@@ -969,16 +1095,25 @@
             background-color: var(--bg-card);
             font-size: 14px;
         }
+         .modal-body textarea:focus, .modal-body select:focus {
+            outline: none;
+            border-color: var(--cc-primary);
+            box-shadow: 0 0 0 3px rgba(0, 74, 158, 0.1);
+        }
 
         .modal-body button {
             margin-top: 16px;
             padding: 12px;
             border-radius: 8px;
-            background-color: var(--cc-blue);
+            background-color: var(--cc-primary);
             color: white;
             font-weight: 600;
             border: none;
             cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .modal-body button:hover {
+            background-color: #003a7c;
         }
     </style>
 </head>
@@ -986,9 +1121,10 @@
 <body>
     <div id="app-container">
 
+        <!-- ===== SIDEBAR ===== -->
         <aside class="sidebar">
             <div class="sidebar-logo">
-                <i class="fa-solid fa-bolt-lightning sidebar-logo-icon"></i>
+                <i class="fa-solid fa-stethoscope sidebar-logo-icon"></i>
                 <span class="sidebar-logo-text">Clinic Connect</span>
             </div>
 
@@ -1005,7 +1141,7 @@
                         </a>
                     </li>
                 </ul>
-                <div class="sidebar-nav-header">Tools</div>
+                <div class="sidebar-nav-header">Tools & Resources</div>
                 <ul class="sidebar-nav-list">
                     <li>
                         <a class="sidebar-nav-link" onclick="showView('directory-view')">
@@ -1026,7 +1162,7 @@
             </nav>
 
             <div class="sidebar-user">
-                <img src="https://placehold.co/100x100/e0eefc/005A9C?text=JY" alt="User avatar">
+                <img src="https://placehold.co/100x100/e6f0f8/004a9e?text=JY" alt="User avatar">
                 <div class="sidebar-user-info">
                     <span class="sidebar-user-name">Dr. James Young</span>
                     <span class="sidebar-user-title">Chief Academic Officer</span>
@@ -1034,102 +1170,122 @@
             </div>
         </aside>
 
+        <!-- ===== HEADER ===== -->
         <header class="header">
             <div class="header-search">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" placeholder="Search patients, teams, or resources...">
+                <input type="text" placeholder="Search patients, teams, or protocols...">
             </div>
             <div class="header-actions">
                 <i class="fa-solid fa-bell header-icon-btn"></i>
                 <i class="fa-solid fa-circle-question header-icon-btn"></i>
                 <div class="header-user-btn">
-                    <img src="https://placehold.co/100x100/e0eefc/005A9C?text=JY" alt="User avatar">
+                    <img src="https://placehold.co/100x100/e6f0f8/004a9e?text=JY" alt="User avatar">
                 </div>
             </div>
         </header>
 
+        <!-- ===== MAIN CONTENT AREA ===== -->
         <main class="main">
 
+            <!-- --- View 1: Dashboard (Default) --- -->
             <div id="dashboard-view" class="view active generic-view">
                 <h1 class="generic-view-header">Welcome, Dr. Young</h1>
-                <div class="dashboard-grid">
+                <div class="dashboard-grid-kpi">
+                    <div class="kpi-card">
+                        <div class="kpi-card-title"><i class="fa-solid fa-hospital-user text-blue-500"></i> Active Patients</div>
+                        <div class="kpi-card-value">142</div>
+                        <div class="kpi-card-trend positive"><i class="fa-solid fa-arrow-up"></i> 3.2% vs. last week</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-card-title"><i class="fa-solid fa-share-nodes text-green-500"></i> Avg. Consult Time</div>
+                        <div class="kpi-card-value">2.1 <span class="text-2xl text-gray-400">hrs</span></div>
+                        <div class="kpi-card-trend positive"><i class="fa-solid fa-arrow-down"></i> 15% vs. last month</div>
+                    </div>
+                     <div class="kpi-card">
+                        <div class="kpi-card-title"><i class="fa-solid fa-triangle-exclamation text-red-500"></i> Critical Alerts</div>
+                        <div class="kpi-card-value">3</div>
+                        <div class="kpi-card-trend negative"><i class="fa-solid fa-arrow-up"></i> 1 vs. yesterday</div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid-main">
+                    <!-- Widget 1: My Tasks -->
                     <div class="dashboard-widget">
-                        <h3 class="dashboard-widget-title"><i class="fa-solid fa-check-double text-blue-500"></i> My Tasks</h3>
+                        <h3 class="dashboard-widget-title">My Tasks</h3>
                         <div class="dashboard-widget-content task-list">
-                            <div class="task-item"><i class="fa-regular fa-square"></i> <span>Review Sarah Chen's labs</span></div>
-                            <div class="task-item"><i class="fa-regular fa-square"></i> <span>Approve 4C Q4 Budget</span></div>
-                            <div class="task-item"><i class="fa-regular fa-square"></i> <span>Sign off on new consult protocol</span></div>
-                            <div class="task-item"><i class="fa-regular fa-square-check text-gray-400"></i> <span class="line-through text-gray-400">Call with Dr. Meyers</span></div>
+                            <div class="task-item"><i class="fa-regular fa-circle"></i> <span>Review Sarah Chen's labs (ICU-302)</span></div>
+                            <div class="task-item"><i class="fa-regular fa-circle"></i> <span>Approve 4C Q4 Budget</span></div>
+                            <div class="task-item"><i class="fa-regular fa-circle"></i> <span>Sign off on new consult protocol</span></div>
+                            <div class="task-item completed"><i class="fa-solid fa-circle-check text-gray-400"></i> <span>Call with Dr. Meyers</span></div>
                         </div>
                     </div>
+                    <!-- Widget 2: Patient Alerts -->
                     <div class="dashboard-widget">
-                        <h3 class="dashboard-widget-title"><i class="fa-solid fa-triangle-exclamation text-red-500"></i> Patient Alerts</h3>
+                        <h3 class="dashboard-widget-title">Recent Activity</h3>
                          <div class="dashboard-widget-content task-list">
                             <div class="alert-item">
-                                <i class="fa-solid fa-user-injured"></i>
+                                <i class="fa-solid fa-user-plus"></i>
                                 <div class="alert-info">
-                                    <div class="alert-title">Sarah Chen (ICU-302)</div>
-                                    <div class="alert-desc">New consult added by Dr. Patel.</div>
+                                    <div class="alert-title">New Consult: Sarah Chen (ICU-302)</div>
+                                    <div class="alert-desc">Dr. Patel added Dr. Ruiz (Ortho) to huddle.</div>
                                 </div>
                             </div>
-                             <div class="alert-item">
+                             <div class="alert-item info">
                                 <i class="fa-solid fa-user-check"></i>
                                 <div class="alert-info">
-                                    <div class="alert-title">Michael Johnson (C-704)</div>
+                                    <div class="alert-title">Discharge: Michael Johnson (C-704)</div>
                                     <div class="alert-desc">Patient discharged. Huddle archived.</div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="dashboard-widget">
-                        <h3 class="dashboard-widget-title"><i class="fa-solid fa-gauge-high text-green-500"></i> System Status</h3>
-                        <div class="dashboard-widget-content">
-                            <div class="metric-card">
-                                <div class="metric-icon bg-green-100 text-green-600"><i class="fa-solid fa-user-group"></i></div>
-                                <div>
-                                    <div class="metric-value">98.1%</div>
-                                    <div class="metric-label">Team Engagement</div>
-                                </div>
-                            </div>
-                            <div class="metric-card">
-                                <div class="metric-icon bg-blue-100 text-blue-600"><i class="fa-solid fa-share-nodes"></i></div>
-                                <div>
-                                    <div class="metric-value">2.1 <span class="text-sm">hrs</span></div>
-                                    <div class="metric-label">Avg. Consult Response</div>
+                             <div class="alert-item info">
+                                <i class="fa-solid fa-hand-holding-hand"></i>
+                                <div class="alert-info">
+                                    <div class="alert-title">Resource Assigned</div>
+                                    <div class="alert-desc">Anna Wexler (Social Work) assigned to M. Johnson.</div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="dashboard-chart-container">
-                    <canvas id="dashboard-chart"></canvas>
+                    <!-- Main Chart -->
+                    <div class="dashboard-chart-container">
+                        <canvas id="dashboard-chart"></canvas>
+                    </div>
                 </div>
             </div>
 
+            <!-- --- View 2: Patient Huddle --- -->
             <div id="patient-view" class="view">
+                <!-- Col 1: Patient List -->
                 <div class="patient-list-col">
                     <div class="patient-list-header">
-                        <h2><i class="fa-solid fa-hospital-user text-gray-400 mr-2"></i> My Patients</h2>
+                        <h2>My Patient Huddles</h2>
+                        <span class="text-sm font-medium text-gray-500">3 Active</span>
                     </div>
                     <div id="patient-list-container" class="patient-list">
-                        </div>
+                        <!-- Patient cards are dynamically inserted here by JS -->
+                    </div>
                 </div>
                 
+                <!-- Col 2: Huddle -->
                 <div class="huddle-col">
                     <div class="huddle-header">
-                        <div class="huddle-header-info">
-                            <h2 id="patient-name-header" class="huddle-header-title">Select a Patient</h2>
+                        <div id="huddle-header-content" class="huddle-header-info">
+                            <h2 id="patient-name-header" class="huddle-header-title"></h2>
                             <span id="patient-status-header" class="huddle-header-status"></span>
                         </div>
-                        <button class="text-gray-500 hover:text-gray-800 text-lg">
-                            <i class="fa-solid fa-phone"></i>
+                        <button class="text-gray-400 hover:text-gray-800 text-lg">
+                            <i class="fa-solid fa-phone-volume"></i>
                         </button>
                     </div>
                     <div id="huddle-feed-container" class="huddle-feed">
-                        <div id="huddle-placeholder" class="text-center text-gray-500 mt-10 p-24">
-                            <i class="fa-solid fa-arrow-left text-2xl mb-2"></i>
-                            <p>Please select a patient from the list to view their huddle.</p>
+                        <!-- This is the professional placeholder -->
+                        <div id="huddle-placeholder">
+                            <i class="fa-solid fa-comments"></i>
+                            <h2>Select a patient to begin</h2>
+                            <p>All huddles related to a patient's care will appear here in real-time.</p>
                         </div>
+                        <!-- Chat messages are dynamically inserted here by JS -->
                     </div>
                     <div class="huddle-input">
                         <div class="huddle-input-box">
@@ -1141,47 +1297,39 @@
                     </div>
                 </div>
                 
+                <!-- Col 3: Context -->
                 <div class="context-col">
+                    <div id="patient-vitals-card" class="info-card">
+                        <div class="info-card-header">
+                            <h2 class="info-card-title">Patient Vitals</h2>
+                        </div>
+                        <div id="patient-vitals-content" class="info-card-content">
+                            <!-- Vitals inserted here by JS -->
+                        </div>
+                    </div>
+                    
                     <div id="care-team-card" class="info-card">
                         <div class="info-card-header">
                             <h2 class="info-card-title">Care Team</h2>
                         </div>
                         <div id="care-team-list" class="info-card-content">
-                             <p class="text-gray-500 text-sm">No patient selected.</p>
-                        </div>
-                    </div>
-                    
-                    <div id="resource-card" class="info-card">
-                        <div class="info-card-header">
-                            <h2 class="info-card-title">Shared Services</h2>
-                        </div>
-                        <div class="info-card-content resource-form">
-                            <div>
-                                <label for="resource-type">Request Support</label>
-                                <select id="resource-type">
-                                    <option>Select service...</option>
-                                    <option>Social Worker</option>
-                                    <option>Patient Administrator</option>
-                                    <option>Language Translator</option>
-                                    <option>Spiritual Care</option>
-                                </select>
-                            </div>
-                            <button onclick="handleRequestResource()">Submit Request</button>
+                             <!-- Team members inserted here by JS -->
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- --- View 3: Team Directory --- -->
             <div id="directory-view" class="view generic-view">
                 <h1 class="generic-view-header">Team Directory</h1>
-                <p class="generic-view-subheader">Find the cross-functional "Centers" and teams that drive patient care. This makes the informal, "real" hospital structure visible and accessible.</p>
                 <div id="directory-grid-container" class="directory-grid">
-                    </div>
+                    <!-- Directory cards are dynamically inserted here by JS -->
+                </div>
             </div>
 
+            <!-- --- View 4: Resource Pool --- -->
             <div id="resources-view" class="view generic-view">
                 <h1 class="generic-view-header">Shared Resource Pool</h1>
-                <p class="generic-view-subheader">Request and manage shared administrative and support staff from the central pool. This ensures resources are allocated by patient need, not by Institute budget.</p>
                 <div class="resource-grid">
                     <div class="resource-card">
                         <div class="resource-card-header">
@@ -1215,16 +1363,28 @@
                             <h3 class="resource-card-title">My Active Requests</h3>
                         </div>
                         <div class="resource-card-content">
-                            <div class="resource-request-item">For <strong>Michael Johnson (C-704)</strong>: Request for <strong>Social Worker</strong>. <span class="status">ASSIGNED</span></div>
-                            <div class="resource-request-item">For <strong>Sarah Chen (ICU-302)</strong>: Request for <strong>Patient Administrator</strong>. <span class="status">PENDING</span></div>
+                            <div class="request-item">
+                                <div>
+                                    <strong>Social Worker</strong>
+                                    <div class="text-sm text-gray-500">For Michael Johnson (C-704)</div>
+                                </div>
+                                <span class="status">ASSIGNED</span>
+                            </div>
+                            <div class="request-item">
+                                <div>
+                                    <strong>Patient Admin</strong>
+                                    <div class="text-sm text-gray-500">For Sarah Chen (ICU-302)</div>
+                                </div>
+                                <span class="status pending">PENDING</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- --- View 5: Analytics --- -->
             <div id="analytics-view" class="view generic-view">
-                <h1 class="generic-view-header">Analytics</h1>
-                <p class="generic-view-subheader">Track cross-institute collaboration, resource allocation, and patient outcomes.</p>
+                <h1 class="generic-view-header">Analytics Dashboard</h1>
                 <div class="analytics-grid">
                     <div class="analytics-chart-container">
                         <canvas id="analytics-chart-1"></canvas>
@@ -1240,6 +1400,7 @@
 
         </main>
         
+        <!-- --- Modal for Adding Consult --- -->
         <div id="add-consult-modal" class="modal-overlay" onclick="closeModal()">
             <div class="modal-content" onclick="event.stopPropagation()">
                 <div class="modal-header">
@@ -1265,21 +1426,9 @@
             </div>
         </div>
         
-        <div id="resource-modal" class="modal-overlay" onclick="closeModal()">
-            <div class="modal-content" onclick="event.stopPropagation()">
-                <div class="modal-header">
-                    <h2 class="modal-title">Request Submitted</h2>
-                    <i class="fa-solid fa-times modal-close-btn" onclick="closeModal()"></i>
-                </div>
-                <div class="modal-body">
-                    <p>Your request for a <strong>Social Worker</strong> has been sent to the Shared Resource Pool.</p>
-                    <p>You will be notified in the patient huddle when they are assigned.</p>
-                    <button onclick="closeModal()">Close</button>
-                </div>
-            </div>
-        </div>
+    </div> <!-- /app-container -->
 
-    </div> <script>
+    <script>
         // --- MOCK DATABASE & APP STATE ---
         const appState = {
             currentView: 'dashboard-view',
@@ -1292,6 +1441,7 @@
                     room: 'ICU-302',
                     status: 'needs-review',
                     statusText: 'In-Patient: Cardiac ICU',
+                    vitals: { hr: '98bpm (Alert)', bp: '130/85', temp: '99.1°F', O2: '96%' },
                     careTeam: [
                         { id: 't1', name: 'Dr. Anya Patel', title: 'Cardiology (Heart Inst.)', avatar: 'AP', status: 'Lead' },
                         { id: 't2', name: 'Kenji Lee, RN', title: 'Cardiac ICU (Nursing Inst.)', avatar: 'KL', status: 'Active' },
@@ -1307,6 +1457,7 @@
                     room: 'E-512',
                     status: 'stable',
                     statusText: 'In-Patient: Neurology',
+                    vitals: { hr: '72bpm', bp: '120/80', temp: '98.6°F', O2: '99%' },
                     careTeam: [
                         { id: 't3', name: 'Dr. Elena Gomez', title: 'Neurology (Neuro Inst.)', avatar: 'EG', status: 'Lead' },
                         { id: 't4', name: 'Mike Chen, RN', title: 'Neuro Step-Down', avatar: 'MC', status: 'Active' },
@@ -1320,7 +1471,8 @@
                     name: 'Michael Johnson',
                     room: 'C-704',
                     status: 'stable',
-                    statusText: 'In-Patient: 4C (Community)',
+                    statusText: 'Discharged (4C)',
+                    vitals: { hr: 'N/A', bp: 'N/A', temp: 'N/A', O2: 'N/A' },
                     careTeam: [
                         { id: 't5', name: 'Dr. Adam Meyers', title: 'Primary Care (4C)', avatar: 'AM', status: 'Lead' },
                         { id: 't6', name: 'Anna Wexler', title: 'Social Work (Shared Pool)', avatar: 'AW', status: 'Active' },
@@ -1328,6 +1480,7 @@
                     huddle: [
                          { type: 'msg', user: 'Dr. Adam Meyers', avatar: 'AM', time: '10:00 AM', text: 'Patient ready for discharge. <span class="mention">@Anna Wexler</span> can you please coordinate post-discharge home care?' },
                          { type: 'msg', user: 'Anna Wexler', avatar: 'AW', time: '10:15 AM', text: 'On it. Home care agency has been contacted. Visit scheduled for tomorrow at 10 AM.' },
+                         { type: 'system', text: 'This huddle has been archived. Patient discharged 10:30 AM.'}
                     ]
                 }
             ],
@@ -1340,7 +1493,6 @@
                 { id: 'c6', name: 'Advanced Heart Failure', institute: 'Heart & Vascular Institute', color: 'red-600', icon: 'fa-solid fa-heart-pulse', description: 'Specialized team for transplant, VAD, and complex HF.' },
             ],
             newConsultDoctor: { id: 't7', name: 'Dr. Marcus Ruiz', title: 'Orthopedics (Ortho Inst.)', avatar: 'MR', status: 'Consult' },
-            // State for charts (to prevent re-rendering)
             charts: {
                 dashboardChart: null,
                 analyticsChart1: null,
@@ -1352,10 +1504,12 @@
         // --- CORE APP LOGIC ---
 
         function showView(viewId) {
+            // Deactivate all links and views
             document.querySelectorAll('.sidebar-nav-link').forEach(link => link.classList.remove('active'));
             document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
+
+            // Activate the new link and view
             document.querySelector(`.sidebar-nav-link[onclick="showView('${viewId}')"]`)?.classList.add('active');
-            
             const viewElement = document.getElementById(viewId);
             if(viewElement) {
                 viewElement.classList.add('active');
@@ -1363,7 +1517,7 @@
             
             appState.currentView = viewId;
             
-            // Render content specific to the view
+            // Call render functions *after* the view is active
             if (viewId === 'dashboard-view') {
                 renderDashboard();
             } else if (viewId === 'directory-view') {
@@ -1373,28 +1527,9 @@
             } else if (viewId === 'patient-view') {
                 renderPatientList();
                 if (appState.selectedPatientId) {
-                    selectPatient(appState.selectedPatientId, false);
+                    selectPatient(appState.selectedPatientId, false); // false = don't re-trigger showView
                 } else {
-                    // Show placeholder if no patient is selected
-                    const placeholder = document.getElementById('huddle-placeholder');
-                    if (placeholder) placeholder.style.display = 'block';
-                    
-                    const nameHeader = document.getElementById('patient-name-header');
-                    if (nameHeader) nameHeader.textContent = 'Select a Patient';
-                    
-                    const statusHeader = document.getElementById('patient-status-header');
-                    if (statusHeader) statusHeader.textContent = '';
-                    
-                    const feedContainer = document.getElementById('huddle-feed-container');
-                    if (feedContainer) feedContainer.innerHTML = `
-                        <div id="huddle-placeholder" class="text-center text-gray-500 mt-10 p-24">
-                            <i class="fa-solid fa-arrow-left text-2xl mb-2"></i>
-                            <p>Please select a patient from the list to view their huddle.</p>
-                        </div>
-                    `;
-                    
-                    const teamList = document.getElementById('care-team-list');
-                    if (teamList) teamList.innerHTML = '<p class="text-gray-500 text-sm">No patient selected.</p>';
+                    renderHuddlePlaceholder();
                 }
             }
         }
@@ -1404,32 +1539,47 @@
             const patient = appState.patients.find(p => p.id === patientId);
             if (!patient) return;
 
+            // Re-render patient list to show new selection
             renderPatientList();
+            
             if (shouldShowView) {
                 showView('patient-view');
             }
 
-            const nameHeader = document.getElementById('patient-name-header');
-            if (nameHeader) nameHeader.textContent = patient.name;
-            
-            const statusHeader = document.getElementById('patient-status-header');
-            if (statusHeader) {
-                statusHeader.textContent = patient.statusText;
-                statusHeader.className = 'huddle-header-status'; // Reset
-                if (patient.status === 'needs-review') {
-                    statusHeader.classList.add('needs-review');
-                } else if (patient.status === 'stable') {
-                    statusHeader.classList.add('stable');
-                }
+            // Update Header
+            const headerContent = document.getElementById('huddle-header-content');
+            if (headerContent) {
+                headerContent.innerHTML = `
+                    <h2 id="patient-name-header" class="huddle-header-title">${patient.name}</h2>
+                    <span id="patient-status-header" class="huddle-header-status ${patient.status === 'stable' ? 'stable' : ''}">${patient.statusText}</span>
+                `;
             }
 
-            const placeholder = document.getElementById('huddle-placeholder');
-            if (placeholder) {
-                placeholder.style.display = 'none';
-            }
-
+            // Render the specific patient's content
             renderHuddle(patient.huddle);
             renderCareTeam(patient.careTeam);
+            renderPatientVitals(patient.vitals);
+        }
+        
+        function renderHuddlePlaceholder() {
+            const container = document.getElementById('huddle-feed-container');
+            if (container) {
+                container.innerHTML = `
+                    <div id="huddle-placeholder">
+                        <i class="fa-solid fa-comments"></i>
+                        <h2>Select a patient to begin</h2>
+                        <p>All huddles related to a patient's care will appear here in real-time.</p>
+                    </div>
+                `;
+            }
+            const headerContent = document.getElementById('huddle-header-content');
+            if (headerContent) headerContent.innerHTML = '';
+            
+            const teamList = document.getElementById('care-team-list');
+            if (teamList) teamList.innerHTML = '<p class="text-sm text-gray-500 p-4 text-center">No patient selected.</p>';
+            
+            const vitals = document.getElementById('patient-vitals-content');
+            if (vitals) vitals.innerHTML = '<p class="text-sm text-gray-500 text-center">No patient selected.</p>';
         }
 
         function handleSendMessage() {
@@ -1447,11 +1597,13 @@
                 avatar: appState.currentUser.avatar,
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                 text: messageText.replace(/</g, "&lt;").replace(/>/g, "&gt;") // Basic sanitization
+                                .replace(/(@[\w\.\s]+)/g, '<span class="mention">$1</span>') // Highlight mentions
             };
             patient.huddle.push(newMessage);
             
             renderHuddle(patient.huddle);
             input.value = '';
+            input.style.height = '48px'; // Reset height
         }
         
         function handleKeydown(event) {
@@ -1487,32 +1639,35 @@
 
             patient.careTeam.push(JSON.parse(JSON.stringify(appState.newConsultDoctor)));
             
-            patient.huddle.push({
+            const newConsultMsg = {
                 type: 'system',
-                text: `${appState.currentUser.name} added @${appState.newConsultDoctor.name} to the Care Team. Reason: "${reason}"`
-            });
+                text: `${appState.currentUser.name} added <span class="mention">@${appState.newConsultDoctor.name}</span> to the Care Team. Reason: "${reason}"`
+            };
+            
+            // This simulates the consult replying
+            const newConsultAck = {
+                 type: 'msg',
+                user: appState.newConsultDoctor.name,
+                avatar: appState.newConsultDoctor.avatar,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                text: 'Acknowledged. On my way to assess.'
+            }
+            
+            patient.huddle.push(newConsultMsg);
             
             renderCareTeam(patient.careTeam);
             renderHuddle(patient.huddle);
-            closeModal();
             
+            // Simulate the reply after 1.5 seconds
+            setTimeout(() => {
+                patient.huddle.push(newConsultAck);
+                renderHuddle(patient.huddle);
+            }, 1500);
+
+            closeModal();
             if(reasonEl) reasonEl.value = '';
         }
         
-        function handleRequestResource() {
-             const select = document.getElementById('resource-type');
-             if (!select || select.value === 'Select service...') return;
-             
-             const resourceName = select.value;
-             const modal = document.getElementById('resource-modal');
-             if(modal) {
-                 modal.querySelector('p:first-of-type').innerHTML = `Your request for a <strong>${resourceName}</strong> has been sent to the Shared Resource Pool.`;
-                 showModal('resource-modal');
-             }
-             
-             select.value = 'Select service...';
-        }
-
         // --- DYNAMIC RENDERING FUNCTIONS ---
 
         function renderPatientList() {
@@ -1539,12 +1694,7 @@
             container.innerHTML = '';
             
             if (!huddle || huddle.length === 0) {
-                container.innerHTML = `
-                    <div id="huddle-placeholder" class="text-center text-gray-500 mt-10 p-24">
-                        <i class="fa-solid fa-comment-slash text-2xl mb-2"></i>
-                        <p>No messages in this huddle yet.</p>
-                    </div>
-                `;
+                renderHuddlePlaceholder();
                 return;
             }
 
@@ -1554,25 +1704,18 @@
                     const avatarColor = getAvatarColor(avatarText);
                     const isCurrentUser = item.user === appState.currentUser.name;
                     
-                    const itemClasses = isCurrentUser ? 'flex-row-reverse' : '';
-                    const nameClasses = isCurrentUser ? 'hidden' : '';
-                    const messageStyle = isCurrentUser 
-                        ? 'border-radius: 12px 0 12px 12px; background-color: #DBEAFE; border-color: #BFDBFE;' 
-                        : 'border-radius: 0 12px 12px 12px;';
-                    
                     container.innerHTML += `
-                        <div class="feed-item ${itemClasses}">
-                            <img src="https://placehold.co/40x40/${avatarColor.bg}/${avatarColor.text}?text=${avatarText}" alt="${item.user}" class="${isCurrentUser ? 'hidden' : ''}">
-                            <div class="feed-item-content ${isCurrentUser ? 'max-w-[70%]' : 'max-w-[70%]'}">
-                                <div class="feed-item-header ${isCurrentUser ? 'justify-end' : ''}">
-                                    <span class="feed-item-name ${nameClasses}">${item.user}</span>
+                        <div class="feed-item ${isCurrentUser ? 'current-user' : ''}">
+                            <img src="https://placehold.co/36x36/${avatarColor.bg}/${avatarColor.text}?text=${avatarText}" alt="${item.user}">
+                            <div class="feed-item-content">
+                                <div class="feed-item-header">
+                                    <span class="feed-item-name ${isCurrentUser ? 'hidden' : ''}">${item.user}</span>
                                     <span class="feed-item-time">${item.time}</span>
                                 </div>
-                                <div class="feed-item-message" style="${messageStyle}">
+                                <div class="feed-item-message">
                                     ${item.text}
                                 </div>
                             </div>
-                            <img src="https://placehold.co/40x40/e0eefc/005A9C?text=${appState.currentUser.avatar}" alt="${appState.currentUser.name}" class="${isCurrentUser ? '' : 'hidden'}">
                         </div>
                     `;
                 } else if (item.type === 'system') {
@@ -1614,19 +1757,44 @@
             `;
         }
         
+        function renderPatientVitals(vitals) {
+            const container = document.getElementById('patient-vitals-content');
+            if (!container) return;
+            container.innerHTML = `
+                <div class="vitals-grid">
+                    <div class="vitals-item">
+                        <div class="vitals-label">Heart Rate</div>
+                        <div class="vitals-value ${vitals.hr.includes('Alert') ? 'critical' : 'normal'}">${vitals.hr}</div>
+                    </div>
+                    <div class="vitals-item">
+                        <div class="vitals-label">Blood Pressure</div>
+                        <div class="vitals-value">${vitals.bp}</div>
+                    </div>
+                    <div class="vitals-item">
+                        <div class="vitals-label">Temp</div>
+                        <div class="vitals-value">${vitals.temp}</div>
+                    </div>
+                    <div class="vitals-item">
+                        <div class="vitals-label">O2 Sat.</div>
+                        <div class="vitals-value normal">${vitals.O2}</div>
+                    </div>
+                </div>
+            `;
+        }
+        
         function renderTeamDirectory() {
             const container = document.getElementById('directory-grid-container');
             if (!container) return;
             container.innerHTML = '';
             const colors = {
-                'blue-600': 'bg-blue-600', 'purple-600': 'bg-purple-600', 'green-600': 'bg-green-600',
-                'sky-600': 'bg-sky-600', 'indigo-600': 'bg-indigo-600', 'red-600': 'bg-red-600'
+                'blue-600': 'bg-blue-100 text-blue-700', 'purple-600': 'bg-purple-100 text-purple-700', 'green-600': 'bg-green-100 text-green-700',
+                'sky-600': 'bg-sky-100 text-sky-700', 'indigo-600': 'bg-indigo-100 text-indigo-700', 'red-600': 'bg-red-100 text-red-700'
             };
             appState.teams.forEach(team => {
                 container.innerHTML += `
                     <div class="team-card">
                         <div class="team-card-header">
-                            <span class="team-card-icon ${colors[team.color] || 'bg-gray-600'} text-white">
+                            <span class="team-card-icon ${colors[team.color] || 'bg-gray-100 text-gray-700'}">
                                 <i class="${team.icon}"></i>
                             </span>
                             <h3 class="team-card-title">${team.name}</h3>
@@ -1656,8 +1824,8 @@
                     datasets: [{
                         label: 'Avg. Consult Response (Hours)',
                         data: [4.5, 4.2, 4.0, 3.5, 2.9, 2.3, 2.1],
-                        borderColor: 'rgba(0, 90, 156, 1)',
-                        backgroundColor: 'rgba(0, 90, 156, 0.1)',
+                        borderColor: 'rgba(0, 74, 158, 1)',
+                        backgroundColor: 'rgba(0, 74, 158, 0.1)',
                         fill: true,
                         tension: 0.4
                     }]
@@ -1666,7 +1834,7 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        title: { display: true, text: 'Consult Response Time (Last 7 Months)', font: { size: 16, weight: '600' } }
+                        title: { display: true, text: 'System-Wide Consult Response Time (Last 7 Months)', font: { size: 16, weight: '600' } }
                     },
                     scales: { y: { beginAtZero: true, title: { display: true, text: 'Hours' } } }
                 }
@@ -1692,7 +1860,7 @@
                     datasets: [{
                         label: 'Collaboration Events',
                         data: [28, 22, 18, 12, 20],
-                        backgroundColor: ['#005A9C', '#2563EB', '#3B82F6', '#60A5FA', '#93C5FD']
+                        backgroundColor: ['#003a7c', '#005a9e', '#2563eb', '#60a5fa', '#93c5fd']
                     }]
                 },
                 options: {
@@ -1712,7 +1880,7 @@
                     datasets: [{
                         label: 'Avg. Response Time (Hours)',
                         data: [4.2, 2.1, 3.5, 5.1, 6.8],
-                        backgroundColor: ['#005A9C', '#2563EB', '#3B82F6', '#60A5FA', '#93C5FD']
+                        backgroundColor: ['#004a9e', '#005a9e', '#2563eb', '#60a5fa', '#93c5fd']
                     }]
                 },
                 options: {
@@ -1755,7 +1923,7 @@
         // --- UTILITY FUNCTIONS ---
         function getAvatarColor(initials) {
             const colors = [
-                { bg: 'dbeafe', text: '1e40af' }, { bg: 'fee2e2', text: '991b1b' },
+                { bg: 'e6f0f8', text: '004a9e' }, { bg: 'fee2e2', text: '991b1b' },
                 { bg: 'e0e7ff', text: '3730a3' }, { bg: 'f0fdf4', text: '15803d' },
                 { bg: 'fefce8', text: '854d0e' }, { bg: 'f3e8ff', text: '6b21a8' },
                 { bg: 'e0f2fe', text: '0369a1' }, { bg: 'ecfdf5', text: '047857' }
@@ -1773,9 +1941,9 @@
             // Set the default view (which will also trigger its specific render function)
             showView(appState.currentView);
             
-            // Pre-select a patient if one is set
-            if (appState.selectedPatientId) {
-                selectPatient(appState.selectedPatientId, false);
+            // Pre-select a patient to demonstrate the "Leg in a Cast" solution
+            if (!appState.selectedPatientId) {
+                selectPatient('p1', false);
             }
         });
 
