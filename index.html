@@ -1,0 +1,1784 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinic Connect - Cleveland Clinic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --cc-blue: #005A9C;
+            --cc-blue-light: #e0eefc;
+            --bg-base: #f3f4f6;
+            --bg-card: #ffffff;
+            --text-primary: #111827;
+            --text-secondary: #4b5563;
+            --text-tertiary: #6b7280;
+            --border-color: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            color: var(--text-primary);
+        }
+
+        /* Main Application Layout */
+        #app-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            grid-template-rows: 65px 1fr;
+            grid-template-areas:
+                "sidebar header"
+                "sidebar main";
+            height: 100vh;
+            width: 100%;
+        }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            grid-area: sidebar;
+            background-color: var(--bg-card);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-logo-icon {
+            font-size: 28px;
+            color: var(--cc-blue);
+        }
+        
+        .sidebar-logo-text {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .sidebar-nav {
+            margin-top: 24px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .sidebar-nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .sidebar-nav-header {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 8px 12px;
+            margin-top: 16px;
+        }
+
+        .sidebar-nav-link {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        .sidebar-nav-link i {
+            width: 20px;
+            margin-right: 12px;
+            font-size: 16px;
+            color: var(--text-tertiary);
+            transition: color 0.2s ease-in-out;
+        }
+
+        .sidebar-nav-link:hover {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+        }
+        
+        .sidebar-nav-link.active {
+            background-color: var(--cc-blue-light);
+            color: var(--cc-blue);
+            font-weight: 600;
+        }
+        
+        .sidebar-nav-link.active i {
+            color: var(--cc-blue);
+        }
+
+        .sidebar-user {
+            margin-top: auto;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-user img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .sidebar-user-info {
+            line-height: 1.4;
+        }
+
+        .sidebar-user-name {
+            font-weight: 600;
+        }
+
+        .sidebar-user-title {
+            font-size: 14px;
+            color: var(--text-tertiary);
+        }
+
+        /* --- Header --- */
+        .header {
+            grid-area: header;
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-search {
+            position: relative;
+        }
+        
+        .header-search input {
+            background-color: var(--bg-base);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 9px 16px 9px 40px;
+            font-size: 14px;
+            width: 350px;
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .header-search input:focus {
+            outline: none;
+            border-color: var(--cc-blue);
+            background-color: var(--bg-card);
+            box-shadow: 0 0 0 2px rgba(0, 90, 156, 0.2);
+        }
+        
+        .header-search i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-tertiary);
+            font-size: 14px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+        
+        .header-icon-btn {
+            font-size: 20px;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            transition: color 0.2s ease-in-out;
+        }
+        
+        .header-icon-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .header-user-btn img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+
+        /* --- Main Content Area --- */
+        .main {
+            grid-area: main;
+            overflow: hidden; /* Main content does not scroll */
+            background-color: var(--bg-base);
+        }
+
+        /* --- All Views (Pages) --- */
+        .view {
+            display: none; /* Hidden by default */
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .view.active {
+            display: block;
+        }
+        
+        /* --- Patient Huddle View (#patient-view) --- */
+        #patient-view {
+            display: none;
+            grid-template-columns: 320px 1fr 340px;
+            grid-template-rows: 1fr;
+            height: calc(100vh - 65px); /* Full height minus header */
+            gap: 0;
+            background-color: var(--bg-base);
+        }
+        
+        #patient-view.active {
+            display: grid;
+        }
+        
+        /* Patient List (Column 1) */
+        .patient-list-col {
+            background-color: var(--bg-card);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .patient-list-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .patient-list-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .patient-list {
+            overflow-y: auto;
+            flex-grow: 1;
+            padding: 16px;
+        }
+        
+        .patient-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+        
+        .patient-card:hover {
+            background-color: #f9fafb;
+        }
+        
+        .patient-card.selected {
+            background-color: var(--cc-blue-light);
+        }
+        
+        .patient-card .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        
+        .patient-card .status-dot.needs-review {
+            background-color: #ef4444; /* Red */
+        }
+
+        .patient-card .status-dot.stable {
+            background-color: #22c55e; /* Green */
+        }
+        
+        .patient-card-info {
+            flex-grow: 1;
+            line-height: 1.4;
+        }
+        
+        .patient-card-name {
+            font-weight: 600;
+        }
+        
+        .patient-card-details {
+            font-size: 14px;
+            color: var(--text-tertiary);
+        }
+        
+        /* Patient Huddle (Column 2) */
+        .huddle-col {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background-color: #f9fafb;
+        }
+        
+        .huddle-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+            background-color: var(--bg-card);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        
+        .huddle-header-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .huddle-header-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .huddle-header-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: #fefcbf;
+            color: #713f12;
+            font-weight: 600;
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 9999px;
+        }
+
+        .huddle-header-status.stable {
+            background-color: #f0fdf4;
+            color: #15803d;
+        }
+        
+        .huddle-feed {
+            flex-grow: 1;
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .feed-item {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .feed-item img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        
+        .feed-item-content {
+            flex: 1;
+        }
+        
+        .feed-item-header {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+        
+        .feed-item-name {
+            font-weight: 600;
+            font-size: 15px;
+        }
+        
+        .feed-item-time {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+        
+        .feed-item-message {
+            margin-top: 4px;
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            background-color: var(--bg-card);
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 0 12px 12px 12px;
+        }
+        
+        .feed-item.system {
+            align-items: center;
+            gap: 16px;
+        }
+
+        .feed-item.system .feed-item-icon {
+            color: var(--text-tertiary);
+            font-size: 14px;
+        }
+        
+        .feed-item.system .feed-item-message {
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+        
+        .feed-item-message .mention {
+            background-color: var(--cc-blue-light);
+            color: var(--cc-blue);
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .huddle-input {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-color);
+            background-color: var(--bg-card);
+            flex-shrink: 0;
+        }
+
+        .huddle-input-box {
+            position: relative;
+        }
+
+        .huddle-input-box textarea {
+            width: 100%;
+            min-height: 70px;
+            padding: 12px 16px;
+            padding-right: 50px;
+            border: 1px solid #d1d5db;
+            border-radius: 12px;
+            resize: vertical;
+            font-size: 15px;
+        }
+        
+        .huddle-input-box textarea:focus {
+            outline: 2px solid var(--cc-blue);
+            border-color: var(--cc-blue);
+        }
+        
+        .huddle-input-button {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background-color: var(--cc-blue);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Context Column (Column 3) */
+        .context-col {
+            background-color: var(--bg-card);
+            border-left: 1px solid var(--border-color);
+            height: 100%;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        
+        .info-card {
+            background-color: var(--bg-base);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+        
+        .info-card-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f9fafb;
+        }
+        
+        .info-card-title {
+            font-size: 16px;
+            font-weight: 700;
+        }
+        
+        .info-card-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background-color: var(--bg-card);
+        }
+
+        .team-member {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .team-member img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+        
+        .team-member-info {
+            line-height: 1.4;
+        }
+        
+        .team-member-name {
+            font-weight: 600;
+        }
+        
+        .team-member-role {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .team-member-status {
+            margin-left: auto;
+            font-size: 12px;
+            font-weight: 500;
+            color: #16a34a; /* Green */
+        }
+
+        .team-member-status.consult {
+            color: var(--text-tertiary);
+        }
+        
+        .add-team-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 10px;
+            border: 1px dashed #d1d5db;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .add-team-button:hover {
+            background-color: #f3f4f6;
+            border-color: #9ca3af;
+        }
+        
+        .resource-form label {
+            display: block;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        
+        .resource-form select,
+        .resource-form button {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            background-color: var(--bg-card);
+            font-size: 14px;
+        }
+
+        .resource-form button {
+            margin-top: 16px;
+            background-color: #10b981;
+            color: white;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+        
+        /* --- Generic View (for Dashboard, Directory, etc.) --- */
+        .generic-view {
+            padding: 40px;
+            height: calc(100vh - 65px); /* Full height minus header */
+            overflow-y: auto;
+        }
+        
+        .generic-view-header {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 32px;
+        }
+        
+        /* Directory Card */
+        .directory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+        
+        .team-card {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .team-card:hover {
+            box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.05);
+            transform: translateY(-2px);
+        }
+        
+        .team-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .team-card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .team-card-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .team-card-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 12px;
+            line-height: 1.6;
+        }
+        
+        .team-card-footer {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .team-card-footer-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+        
+        .team-card-institute {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* --- Dashboard Widgets --- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .dashboard-widget {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+        }
+        
+        .dashboard-widget-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dashboard-widget-content {
+            margin-top: 20px;
+        }
+        
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .task-item i {
+            color: var(--cc-blue);
+            cursor: pointer;
+        }
+        
+        .alert-item {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .alert-item i {
+            margin-top: 5px;
+            color: #ef4444; /* Red */
+        }
+        
+        .alert-info {
+            line-height: 1.5;
+        }
+        .alert-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .alert-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .metric-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .metric-card:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .metric-icon {
+            font-size: 20px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .metric-value {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .metric-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .dashboard-chart-container {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+            height: 350px;
+        }
+        
+        /* --- Resources View --- */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        
+        .resource-card {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+        }
+        
+        .resource-card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .resource-card-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .resource-card-content {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .resource-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .resource-item:last-child { border-bottom: none; }
+        
+        .resource-name {
+            font-size: 15px;
+            font-weight: 500;
+        }
+        
+        .resource-status {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .resource-status.available { color: #16a34a; }
+        .resource-status.strained { color: #f59e0b; }
+        .resource-status.capacity { color: #ef4444; }
+        
+        .resource-request-item {
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+        .resource-request-item strong {
+            color: var(--text-primary);
+        }
+        .resource-request-item .status {
+            font-style: italic;
+            color: var(--cc-blue);
+        }
+
+        /* --- Analytics View --- */
+        .analytics-grid {
+             display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+        .analytics-chart-container {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+            height: 400px; /* Give charts a fixed height */
+        }
+        .analytics-chart-container.full-width {
+            grid-column: 1 / -1;
+        }
+
+        
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            padding: 32px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            transform: scale(0.95);
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .modal-close-btn {
+            font-size: 18px;
+            color: var(--text-tertiary);
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            margin-top: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .modal-body label {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .modal-body select, .modal-body textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            background-color: var(--bg-card);
+            font-size: 14px;
+        }
+
+        .modal-body button {
+            margin-top: 16px;
+            padding: 12px;
+            border-radius: 8px;
+            background-color: var(--cc-blue);
+            color: white;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app-container">
+
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fa-solid fa-bolt-lightning sidebar-logo-icon"></i>
+                <span class="sidebar-logo-text">Clinic Connect</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul class="sidebar-nav-list">
+                    <li>
+                        <a class="sidebar-nav-link active" onclick="showView('dashboard-view')">
+                            <i class="fa-solid fa-table-columns"></i> Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a class="sidebar-nav-link" onclick="showView('patient-view')">
+                            <i class="fa-solid fa-hospital-user"></i> Patient Huddles
+                        </a>
+                    </li>
+                </ul>
+                <div class="sidebar-nav-header">Tools</div>
+                <ul class="sidebar-nav-list">
+                    <li>
+                        <a class="sidebar-nav-link" onclick="showView('directory-view')">
+                            <i class="fa-solid fa-users"></i> Team Directory
+                        </a>
+                    </li>
+                    <li>
+                        <a class="sidebar-nav-link" onclick="showView('resources-view')">
+                            <i class="fa-solid fa-hand-holding-hand"></i> Shared Resources
+                        </a>
+                    </li>
+                    <li>
+                        <a class="sidebar-nav-link" onclick="showView('analytics-view')">
+                            <i class="fa-solid fa-chart-line"></i> Analytics
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-user">
+                <img src="https://placehold.co/100x100/e0eefc/005A9C?text=JY" alt="User avatar">
+                <div class="sidebar-user-info">
+                    <span class="sidebar-user-name">Dr. James Young</span>
+                    <span class="sidebar-user-title">Chief Academic Officer</span>
+                </div>
+            </div>
+        </aside>
+
+        <header class="header">
+            <div class="header-search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="Search patients, teams, or resources...">
+            </div>
+            <div class="header-actions">
+                <i class="fa-solid fa-bell header-icon-btn"></i>
+                <i class="fa-solid fa-circle-question header-icon-btn"></i>
+                <div class="header-user-btn">
+                    <img src="https://placehold.co/100x100/e0eefc/005A9C?text=JY" alt="User avatar">
+                </div>
+            </div>
+        </header>
+
+        <main class="main">
+
+            <div id="dashboard-view" class="view active generic-view">
+                <h1 class="generic-view-header">Welcome, Dr. Young</h1>
+                <div class="dashboard-grid">
+                    <div class="dashboard-widget">
+                        <h3 class="dashboard-widget-title"><i class="fa-solid fa-check-double text-blue-500"></i> My Tasks</h3>
+                        <div class="dashboard-widget-content task-list">
+                            <div class="task-item"><i class="fa-regular fa-square"></i> <span>Review Sarah Chen's labs</span></div>
+                            <div class="task-item"><i class="fa-regular fa-square"></i> <span>Approve 4C Q4 Budget</span></div>
+                            <div class="task-item"><i class="fa-regular fa-square"></i> <span>Sign off on new consult protocol</span></div>
+                            <div class="task-item"><i class="fa-regular fa-square-check text-gray-400"></i> <span class="line-through text-gray-400">Call with Dr. Meyers</span></div>
+                        </div>
+                    </div>
+                    <div class="dashboard-widget">
+                        <h3 class="dashboard-widget-title"><i class="fa-solid fa-triangle-exclamation text-red-500"></i> Patient Alerts</h3>
+                         <div class="dashboard-widget-content task-list">
+                            <div class="alert-item">
+                                <i class="fa-solid fa-user-injured"></i>
+                                <div class="alert-info">
+                                    <div class="alert-title">Sarah Chen (ICU-302)</div>
+                                    <div class="alert-desc">New consult added by Dr. Patel.</div>
+                                </div>
+                            </div>
+                             <div class="alert-item">
+                                <i class="fa-solid fa-user-check"></i>
+                                <div class="alert-info">
+                                    <div class="alert-title">Michael Johnson (C-704)</div>
+                                    <div class="alert-desc">Patient discharged. Huddle archived.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dashboard-widget">
+                        <h3 class="dashboard-widget-title"><i class="fa-solid fa-gauge-high text-green-500"></i> System Status</h3>
+                        <div class="dashboard-widget-content">
+                            <div class="metric-card">
+                                <div class="metric-icon bg-green-100 text-green-600"><i class="fa-solid fa-user-group"></i></div>
+                                <div>
+                                    <div class="metric-value">98.1%</div>
+                                    <div class="metric-label">Team Engagement</div>
+                                </div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-icon bg-blue-100 text-blue-600"><i class="fa-solid fa-share-nodes"></i></div>
+                                <div>
+                                    <div class="metric-value">2.1 <span class="text-sm">hrs</span></div>
+                                    <div class="metric-label">Avg. Consult Response</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dashboard-chart-container">
+                    <canvas id="dashboard-chart"></canvas>
+                </div>
+            </div>
+
+            <div id="patient-view" class="view">
+                <div class="patient-list-col">
+                    <div class="patient-list-header">
+                        <h2><i class="fa-solid fa-hospital-user text-gray-400 mr-2"></i> My Patients</h2>
+                    </div>
+                    <div id="patient-list-container" class="patient-list">
+                        </div>
+                </div>
+                
+                <div class="huddle-col">
+                    <div class="huddle-header">
+                        <div class="huddle-header-info">
+                            <h2 id="patient-name-header" class="huddle-header-title">Select a Patient</h2>
+                            <span id="patient-status-header" class="huddle-header-status"></span>
+                        </div>
+                        <button class="text-gray-500 hover:text-gray-800 text-lg">
+                            <i class="fa-solid fa-phone"></i>
+                        </button>
+                    </div>
+                    <div id="huddle-feed-container" class="huddle-feed">
+                        <div id="huddle-placeholder" class="text-center text-gray-500 mt-10 p-24">
+                            <i class="fa-solid fa-arrow-left text-2xl mb-2"></i>
+                            <p>Please select a patient from the list to view their huddle.</p>
+                        </div>
+                    </div>
+                    <div class="huddle-input">
+                        <div class="huddle-input-box">
+                            <textarea id="huddle-message-input" placeholder="Send a message to the Care Team... (e.g., @Dr. Patel or @Nurse Lee)" onkeydown="handleKeydown(event)"></textarea>
+                            <button class="huddle-input-button" onclick="handleSendMessage()">
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="context-col">
+                    <div id="care-team-card" class="info-card">
+                        <div class="info-card-header">
+                            <h2 class="info-card-title">Care Team</h2>
+                        </div>
+                        <div id="care-team-list" class="info-card-content">
+                             <p class="text-gray-500 text-sm">No patient selected.</p>
+                        </div>
+                    </div>
+                    
+                    <div id="resource-card" class="info-card">
+                        <div class="info-card-header">
+                            <h2 class="info-card-title">Shared Services</h2>
+                        </div>
+                        <div class="info-card-content resource-form">
+                            <div>
+                                <label for="resource-type">Request Support</label>
+                                <select id="resource-type">
+                                    <option>Select service...</option>
+                                    <option>Social Worker</option>
+                                    <option>Patient Administrator</option>
+                                    <option>Language Translator</option>
+                                    <option>Spiritual Care</option>
+                                </select>
+                            </div>
+                            <button onclick="handleRequestResource()">Submit Request</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="directory-view" class="view generic-view">
+                <h1 class="generic-view-header">Team Directory</h1>
+                <p class="generic-view-subheader">Find the cross-functional "Centers" and teams that drive patient care. This makes the informal, "real" hospital structure visible and accessible.</p>
+                <div id="directory-grid-container" class="directory-grid">
+                    </div>
+            </div>
+
+            <div id="resources-view" class="view generic-view">
+                <h1 class="generic-view-header">Shared Resource Pool</h1>
+                <p class="generic-view-subheader">Request and manage shared administrative and support staff from the central pool. This ensures resources are allocated by patient need, not by Institute budget.</p>
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <div class="resource-card-header">
+                            <h3 class="resource-card-title">Available Services</h3>
+                        </div>
+                        <div class="resource-card-content">
+                            <div class="resource-item">
+                                <span class="resource-name"><i class="fa-solid fa-user-group w-8 text-gray-500"></i> Social Work</span>
+                                <span class="resource-status available">Available</span>
+                            </div>
+                            <div class="resource-item">
+                                <span class="resource-name"><i class="fa-solid fa-clipboard-user w-8 text-gray-500"></i> Patient Admin</span>
+                                <span class="resource-status strained">Strained</span>
+                            </div>
+                            <div class="resource-item">
+                                <span class="resource-name"><i class="fa-solid fa-language w-8 text-gray-500"></i> Translation</span>
+                                <span class="resource-status available">Available</span>
+                            </div>
+                             <div class="resource-item">
+                                <span class="resource-name"><i class="fa-solid fa-hand-holding-heart w-8 text-gray-500"></i> Spiritual Care</span>
+                                <span class="resource-status available">Available</span>
+                            </div>
+                             <div class="resource-item">
+                                <span class="resource-name"><i class="fa-solid fa-file-invoice-dollar w-8 text-gray-500"></i> Billing Support</span>
+                                <span class="resource-status capacity">At Capacity</span>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="resource-card">
+                        <div class="resource-card-header">
+                            <h3 class="resource-card-title">My Active Requests</h3>
+                        </div>
+                        <div class="resource-card-content">
+                            <div class="resource-request-item">For <strong>Michael Johnson (C-704)</strong>: Request for <strong>Social Worker</strong>. <span class="status">ASSIGNED</span></div>
+                            <div class="resource-request-item">For <strong>Sarah Chen (ICU-302)</strong>: Request for <strong>Patient Administrator</strong>. <span class="status">PENDING</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="analytics-view" class="view generic-view">
+                <h1 class="generic-view-header">Analytics</h1>
+                <p class="generic-view-subheader">Track cross-institute collaboration, resource allocation, and patient outcomes.</p>
+                <div class="analytics-grid">
+                    <div class="analytics-chart-container">
+                        <canvas id="analytics-chart-1"></canvas>
+                    </div>
+                     <div class="analytics-chart-container">
+                        <canvas id="analytics-chart-2"></canvas>
+                    </div>
+                     <div class="analytics-chart-container full-width">
+                        <canvas id="analytics-chart-3"></canvas>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+        
+        <div id="add-consult-modal" class="modal-overlay" onclick="closeModal()">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2 class="modal-title">Request Consult</h2>
+                    <i class="fa-solid fa-times modal-close-btn" onclick="closeModal()"></i>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <label for="consult-institute">Select Institute</label>
+                        <select id="consult-institute">
+                            <option>Orthopedic Institute</option>
+                            <option>Neurological Institute</option>
+                            <option>Digestive Disease & Surgery</option>
+                            <option>Endocrinology & Metabolism</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="consult-reason">Reason for Consult</label>
+                        <textarea id="consult-reason" rows="3" placeholder="e.g., Patient reports numbness in left foot..."></textarea>
+                    </div>
+                    <button onclick="handleAddConsult()">Add to Care Team</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="resource-modal" class="modal-overlay" onclick="closeModal()">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2 class="modal-title">Request Submitted</h2>
+                    <i class="fa-solid fa-times modal-close-btn" onclick="closeModal()"></i>
+                </div>
+                <div class="modal-body">
+                    <p>Your request for a <strong>Social Worker</strong> has been sent to the Shared Resource Pool.</p>
+                    <p>You will be notified in the patient huddle when they are assigned.</p>
+                    <button onclick="closeModal()">Close</button>
+                </div>
+            </div>
+        </div>
+
+    </div> <script>
+        // --- MOCK DATABASE & APP STATE ---
+        const appState = {
+            currentView: 'dashboard-view',
+            selectedPatientId: null,
+            currentUser: { name: 'Dr. James Young', avatar: 'JY' },
+            patients: [
+                {
+                    id: 'p1',
+                    name: 'Sarah Chen',
+                    room: 'ICU-302',
+                    status: 'needs-review',
+                    statusText: 'In-Patient: Cardiac ICU',
+                    careTeam: [
+                        { id: 't1', name: 'Dr. Anya Patel', title: 'Cardiology (Heart Inst.)', avatar: 'AP', status: 'Lead' },
+                        { id: 't2', name: 'Kenji Lee, RN', title: 'Cardiac ICU (Nursing Inst.)', avatar: 'KL', status: 'Active' },
+                    ],
+                    huddle: [
+                        { type: 'msg', user: 'Dr. Anya Patel', avatar: 'AP', time: '9:05 AM', text: 'Patient stable post-procedure. Vitals look good. Main concern is post-op monitoring. She also has a cast on her left leg from a prior injury.' },
+                        { type: 'msg', user: 'Kenji Lee, RN', avatar: 'KL', time: '11:32 AM', text: 'Patient reports significant numbness and "pins and needles" in her left foot. Cast feels tight to the touch.' },
+                    ]
+                },
+                {
+                    id: 'p2',
+                    name: 'David Kim',
+                    room: 'E-512',
+                    status: 'stable',
+                    statusText: 'In-Patient: Neurology',
+                    careTeam: [
+                        { id: 't3', name: 'Dr. Elena Gomez', title: 'Neurology (Neuro Inst.)', avatar: 'EG', status: 'Lead' },
+                        { id: 't4', name: 'Mike Chen, RN', title: 'Neuro Step-Down', avatar: 'MC', status: 'Active' },
+                    ],
+                    huddle: [
+                         { type: 'msg', user: 'Dr. Elena Gomez', avatar: 'EG', time: '8:15 AM', text: 'Patient resting. Awaiting morning lab results to determine discharge plan.' },
+                    ]
+                },
+                {
+                    id: 'p3',
+                    name: 'Michael Johnson',
+                    room: 'C-704',
+                    status: 'stable',
+                    statusText: 'In-Patient: 4C (Community)',
+                    careTeam: [
+                        { id: 't5', name: 'Dr. Adam Meyers', title: 'Primary Care (4C)', avatar: 'AM', status: 'Lead' },
+                        { id: 't6', name: 'Anna Wexler', title: 'Social Work (Shared Pool)', avatar: 'AW', status: 'Active' },
+                    ],
+                    huddle: [
+                         { type: 'msg', user: 'Dr. Adam Meyers', avatar: 'AM', time: '10:00 AM', text: 'Patient ready for discharge. <span class="mention">@Anna Wexler</span> can you please coordinate post-discharge home care?' },
+                         { type: 'msg', user: 'Anna Wexler', avatar: 'AW', time: '10:15 AM', text: 'On it. Home care agency has been contacted. Visit scheduled for tomorrow at 10 AM.' },
+                    ]
+                }
+            ],
+            teams: [
+                { id: 'c1', name: 'Fetal Surgery Center', institute: 'Cross-Institute (Peds, Ob/Gyn)', color: 'blue-600', icon: 'fa-solid fa-baby', description: 'Cross-functional team for high-risk fetal interventions.' },
+                { id: 'c2', name: 'Epilepsy Program', institute: 'Neurological Institute', color: 'purple-600', icon: 'fa-solid fa-brain', description: 'Combined medical, surgical, and psychiatric care for epilepsy.' },
+                { id: 'c3', name: 'Hernia Surgery Team', institute: 'Digestive Disease & Surgery', color: 'green-600', icon: 'fa-solid fa-layer-group', description: 'Routine and complex abdominal wall hernia repairs.' },
+                { id: 'c4', name: '4C Community Care', institute: 'Primary Care (4C)', color: 'sky-600', icon: 'fa-solid fa-house-medical', description: 'Long-term population health and primary care network.' },
+                { id: 'c5', name: 'Spine Center', institute: 'Cross-Institute (Ortho, Neuro)', color: 'indigo-600', icon: 'fa-solid fa-bone', description: 'Integrated care for complex spine disorders and back pain.' },
+                { id: 'c6', name: 'Advanced Heart Failure', institute: 'Heart & Vascular Institute', color: 'red-600', icon: 'fa-solid fa-heart-pulse', description: 'Specialized team for transplant, VAD, and complex HF.' },
+            ],
+            newConsultDoctor: { id: 't7', name: 'Dr. Marcus Ruiz', title: 'Orthopedics (Ortho Inst.)', avatar: 'MR', status: 'Consult' },
+            // State for charts (to prevent re-rendering)
+            charts: {
+                dashboardChart: null,
+                analyticsChart1: null,
+                analyticsChart2: null,
+                analyticsChart3: null
+            }
+        };
+
+        // --- CORE APP LOGIC ---
+
+        function showView(viewId) {
+            document.querySelectorAll('.sidebar-nav-link').forEach(link => link.classList.remove('active'));
+            document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
+            document.querySelector(`.sidebar-nav-link[onclick="showView('${viewId}')"]`)?.classList.add('active');
+            
+            const viewElement = document.getElementById(viewId);
+            if(viewElement) {
+                viewElement.classList.add('active');
+            }
+            
+            appState.currentView = viewId;
+            
+            // Render content specific to the view
+            if (viewId === 'dashboard-view') {
+                renderDashboard();
+            } else if (viewId === 'directory-view') {
+                renderTeamDirectory();
+            } else if (viewId === 'analytics-view') {
+                renderAnalytics();
+            } else if (viewId === 'patient-view') {
+                renderPatientList();
+                if (appState.selectedPatientId) {
+                    selectPatient(appState.selectedPatientId, false);
+                } else {
+                    // Show placeholder if no patient is selected
+                    const placeholder = document.getElementById('huddle-placeholder');
+                    if (placeholder) placeholder.style.display = 'block';
+                    
+                    const nameHeader = document.getElementById('patient-name-header');
+                    if (nameHeader) nameHeader.textContent = 'Select a Patient';
+                    
+                    const statusHeader = document.getElementById('patient-status-header');
+                    if (statusHeader) statusHeader.textContent = '';
+                    
+                    const feedContainer = document.getElementById('huddle-feed-container');
+                    if (feedContainer) feedContainer.innerHTML = `
+                        <div id="huddle-placeholder" class="text-center text-gray-500 mt-10 p-24">
+                            <i class="fa-solid fa-arrow-left text-2xl mb-2"></i>
+                            <p>Please select a patient from the list to view their huddle.</p>
+                        </div>
+                    `;
+                    
+                    const teamList = document.getElementById('care-team-list');
+                    if (teamList) teamList.innerHTML = '<p class="text-gray-500 text-sm">No patient selected.</p>';
+                }
+            }
+        }
+
+        function selectPatient(patientId, shouldShowView = true) {
+            appState.selectedPatientId = patientId;
+            const patient = appState.patients.find(p => p.id === patientId);
+            if (!patient) return;
+
+            renderPatientList();
+            if (shouldShowView) {
+                showView('patient-view');
+            }
+
+            const nameHeader = document.getElementById('patient-name-header');
+            if (nameHeader) nameHeader.textContent = patient.name;
+            
+            const statusHeader = document.getElementById('patient-status-header');
+            if (statusHeader) {
+                statusHeader.textContent = patient.statusText;
+                statusHeader.className = 'huddle-header-status'; // Reset
+                if (patient.status === 'needs-review') {
+                    statusHeader.classList.add('needs-review');
+                } else if (patient.status === 'stable') {
+                    statusHeader.classList.add('stable');
+                }
+            }
+
+            const placeholder = document.getElementById('huddle-placeholder');
+            if (placeholder) {
+                placeholder.style.display = 'none';
+            }
+
+            renderHuddle(patient.huddle);
+            renderCareTeam(patient.careTeam);
+        }
+
+        function handleSendMessage() {
+            const input = document.getElementById('huddle-message-input');
+            if (!input) return;
+            const messageText = input.value.trim();
+            if (messageText === '' || !appState.selectedPatientId) return;
+            
+            const patient = appState.patients.find(p => p.id === appState.selectedPatientId);
+            if (!patient) return;
+            
+            const newMessage = {
+                type: 'msg',
+                user: appState.currentUser.name,
+                avatar: appState.currentUser.avatar,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                text: messageText.replace(/</g, "&lt;").replace(/>/g, "&gt;") // Basic sanitization
+            };
+            patient.huddle.push(newMessage);
+            
+            renderHuddle(patient.huddle);
+            input.value = '';
+        }
+        
+        function handleKeydown(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                handleSendMessage();
+            }
+        }
+
+        function showModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if(modal) modal.classList.add('active');
+        }
+        
+        function closeModal() {
+            document.querySelectorAll('.modal-overlay').forEach(modal => {
+                modal.classList.remove('active');
+            });
+        }
+        
+        function handleAddConsult() {
+            const patient = appState.patients.find(p => p.id === appState.selectedPatientId);
+            if (!patient) return;
+            
+            const reasonEl = document.getElementById('consult-reason');
+            const reason = reasonEl.value || "Consult requested.";
+
+            // Check if doctor is already on the team
+            if (patient.careTeam.find(m => m.id === appState.newConsultDoctor.id)) {
+                 closeModal();
+                 return;
+            }
+
+            patient.careTeam.push(JSON.parse(JSON.stringify(appState.newConsultDoctor)));
+            
+            patient.huddle.push({
+                type: 'system',
+                text: `${appState.currentUser.name} added @${appState.newConsultDoctor.name} to the Care Team. Reason: "${reason}"`
+            });
+            
+            renderCareTeam(patient.careTeam);
+            renderHuddle(patient.huddle);
+            closeModal();
+            
+            if(reasonEl) reasonEl.value = '';
+        }
+        
+        function handleRequestResource() {
+             const select = document.getElementById('resource-type');
+             if (!select || select.value === 'Select service...') return;
+             
+             const resourceName = select.value;
+             const modal = document.getElementById('resource-modal');
+             if(modal) {
+                 modal.querySelector('p:first-of-type').innerHTML = `Your request for a <strong>${resourceName}</strong> has been sent to the Shared Resource Pool.`;
+                 showModal('resource-modal');
+             }
+             
+             select.value = 'Select service...';
+        }
+
+        // --- DYNAMIC RENDERING FUNCTIONS ---
+
+        function renderPatientList() {
+            const container = document.getElementById('patient-list-container');
+            if (!container) return;
+            container.innerHTML = '';
+            appState.patients.forEach(patient => {
+                const isSelected = patient.id === appState.selectedPatientId;
+                container.innerHTML += `
+                    <div class="patient-card ${isSelected ? 'selected' : ''}" onclick="selectPatient('${patient.id}')">
+                        <span class="status-dot ${patient.status}"></span>
+                        <div class="patient-card-info">
+                            <div class="patient-card-name">${patient.name}</div>
+                            <div class="patient-card-details">Room ${patient.room}</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderHuddle(huddle) {
+            const container = document.getElementById('huddle-feed-container');
+            if (!container) return;
+            container.innerHTML = '';
+            
+            if (!huddle || huddle.length === 0) {
+                container.innerHTML = `
+                    <div id="huddle-placeholder" class="text-center text-gray-500 mt-10 p-24">
+                        <i class="fa-solid fa-comment-slash text-2xl mb-2"></i>
+                        <p>No messages in this huddle yet.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            huddle.forEach(item => {
+                if (item.type === 'msg') {
+                    const avatarText = item.avatar || '??';
+                    const avatarColor = getAvatarColor(avatarText);
+                    const isCurrentUser = item.user === appState.currentUser.name;
+                    
+                    const itemClasses = isCurrentUser ? 'flex-row-reverse' : '';
+                    const nameClasses = isCurrentUser ? 'hidden' : '';
+                    const messageStyle = isCurrentUser 
+                        ? 'border-radius: 12px 0 12px 12px; background-color: #DBEAFE; border-color: #BFDBFE;' 
+                        : 'border-radius: 0 12px 12px 12px;';
+                    
+                    container.innerHTML += `
+                        <div class="feed-item ${itemClasses}">
+                            <img src="https://placehold.co/40x40/${avatarColor.bg}/${avatarColor.text}?text=${avatarText}" alt="${item.user}" class="${isCurrentUser ? 'hidden' : ''}">
+                            <div class="feed-item-content ${isCurrentUser ? 'max-w-[70%]' : 'max-w-[70%]'}">
+                                <div class="feed-item-header ${isCurrentUser ? 'justify-end' : ''}">
+                                    <span class="feed-item-name ${nameClasses}">${item.user}</span>
+                                    <span class="feed-item-time">${item.time}</span>
+                                </div>
+                                <div class="feed-item-message" style="${messageStyle}">
+                                    ${item.text}
+                                </div>
+                            </div>
+                            <img src="https://placehold.co/40x40/e0eefc/005A9C?text=${appState.currentUser.avatar}" alt="${appState.currentUser.name}" class="${isCurrentUser ? '' : 'hidden'}">
+                        </div>
+                    `;
+                } else if (item.type === 'system') {
+                    container.innerHTML += `
+                        <div class="feed-item system">
+                            <i class="fa-solid fa-circle-info feed-item-icon"></i>
+                            <div class="feed-item-content">
+                                <span class="feed-item-message">${item.text}</span>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function renderCareTeam(careTeam) {
+            const container = document.getElementById('care-team-list');
+            if (!container) return;
+            container.innerHTML = '';
+            careTeam.forEach(member => {
+                const avatarText = member.avatar || '??';
+                const avatarColor = getAvatarColor(avatarText);
+                container.innerHTML += `
+                    <div class="team-member">
+                        <img src="https://placehold.co/40x40/${avatarColor.bg}/${avatarColor.text}?text=${avatarText}" alt="${member.name}">
+                        <div class="team-member-info">
+                            <span class="team-member-name">${member.name}</span>
+                            <span class="team-member-role">${member.title}</span>
+                        </div>
+                        <span class="team-member-status ${member.status.toLowerCase()}">${member.status}</span>
+                    </div>
+                `;
+            });
+            container.innerHTML += `
+                <button class="add-team-button" onclick="showModal('add-consult-modal')">
+                    <i class="fa-solid fa-plus"></i> Request Consult
+                </button>
+            `;
+        }
+        
+        function renderTeamDirectory() {
+            const container = document.getElementById('directory-grid-container');
+            if (!container) return;
+            container.innerHTML = '';
+            const colors = {
+                'blue-600': 'bg-blue-600', 'purple-600': 'bg-purple-600', 'green-600': 'bg-green-600',
+                'sky-600': 'bg-sky-600', 'indigo-600': 'bg-indigo-600', 'red-600': 'bg-red-600'
+            };
+            appState.teams.forEach(team => {
+                container.innerHTML += `
+                    <div class="team-card">
+                        <div class="team-card-header">
+                            <span class="team-card-icon ${colors[team.color] || 'bg-gray-600'} text-white">
+                                <i class="${team.icon}"></i>
+                            </span>
+                            <h3 class="team-card-title">${team.name}</h3>
+                        </div>
+                        <p class="team-card-description">${team.description}</p>
+                        <div class="team-card-footer">
+                            <div class="team-card-footer-title">Primary Institute(s)</div>
+                            <div class="team-card-institute">${team.institute}</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        
+        function renderDashboard() {
+            const ctx = document.getElementById('dashboard-chart')?.getContext('2d');
+            if (!ctx) return;
+            
+            if (appState.charts.dashboardChart) {
+                appState.charts.dashboardChart.destroy();
+            }
+
+            appState.charts.dashboardChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                    datasets: [{
+                        label: 'Avg. Consult Response (Hours)',
+                        data: [4.5, 4.2, 4.0, 3.5, 2.9, 2.3, 2.1],
+                        borderColor: 'rgba(0, 90, 156, 1)',
+                        backgroundColor: 'rgba(0, 90, 156, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: 'Consult Response Time (Last 7 Months)', font: { size: 16, weight: '600' } }
+                    },
+                    scales: { y: { beginAtZero: true, title: { display: true, text: 'Hours' } } }
+                }
+            });
+        }
+
+        function renderAnalytics() {
+            const ctx1 = document.getElementById('analytics-chart-1')?.getContext('2d');
+            const ctx2 = document.getElementById('analytics-chart-2')?.getContext('2d');
+            const ctx3 = document.getElementById('analytics-chart-3')?.getContext('2d');
+            
+            if (!ctx1 || !ctx2 || !ctx3) return;
+            
+            if (appState.charts.analyticsChart1) appState.charts.analyticsChart1.destroy();
+            if (appState.charts.analyticsChart2) appState.charts.analyticsChart2.destroy();
+            if (appState.charts.analyticsChart3) appState.charts.analyticsChart3.destroy();
+            
+            // Chart 1: Cross-Institute Collaboration
+            appState.charts.analyticsChart1 = new Chart(ctx1, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Heart + Ortho', 'Neuro + Psych', 'Peds + Ob/Gyn', '4C + Social Work', 'Internal (Same Inst.)'],
+                    datasets: [{
+                        label: 'Collaboration Events',
+                        data: [28, 22, 18, 12, 20],
+                        backgroundColor: ['#005A9C', '#2563EB', '#3B82F6', '#60A5FA', '#93C5FD']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: 'Cross-Institute Collaboration (Last 30 Days)', font: { size: 16, weight: '600' } }
+                    }
+                }
+            });
+
+            // Chart 2: Consult Response Velocity
+            appState.charts.analyticsChart2 = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: ['Orthopedics', 'Neurology', 'Endocrinology', 'Digestive', 'Psychiatry'],
+                    datasets: [{
+                        label: 'Avg. Response Time (Hours)',
+                        data: [4.2, 2.1, 3.5, 5.1, 6.8],
+                        backgroundColor: ['#005A9C', '#2563EB', '#3B82F6', '#60A5FA', '#93C5FD']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: 'Consult Response Velocity by Institute', font: { size: 16, weight: '600' } },
+                        legend: { display: false }
+                    },
+                    scales: { y: { beginAtZero: true, title: { display: true, text: 'Hours' } } }
+                }
+            });
+
+            // Chart 3: Shared Resource Utilization
+            appState.charts.analyticsChart3 = new Chart(ctx3, {
+                type: 'bar',
+                data: {
+                    labels: ['Heart & Vascular', 'Neurological', 'Digestive', '4C (Community)', 'Orthopedic', 'Medicine'],
+                    datasets: [{
+                        label: 'Shared Admin Hours Requested',
+                        data: [120, 85, 95, 70, 40, 65],
+                        backgroundColor: 'rgba(16, 185, 129, 0.7)',
+                        borderColor: 'rgba(16, 185, 129, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', // Horizontal Bar Chart
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: 'Shared Resource Utilization by Institute', font: { size: 16, weight: '600' } },
+                        legend: { display: false }
+                    },
+                    scales: { x: { beginAtZero: true, title: { display: true, text: 'Hours Requested (Last 30 Days)' } } }
+                }
+            });
+        }
+
+        // --- UTILITY FUNCTIONS ---
+        function getAvatarColor(initials) {
+            const colors = [
+                { bg: 'dbeafe', text: '1e40af' }, { bg: 'fee2e2', text: '991b1b' },
+                { bg: 'e0e7ff', text: '3730a3' }, { bg: 'f0fdf4', text: '15803d' },
+                { bg: 'fefce8', text: '854d0e' }, { bg: 'f3e8ff', text: '6b21a8' },
+                { bg: 'e0f2fe', text: '0369a1' }, { bg: 'ecfdf5', text: '047857' }
+            ];
+            const charCode = (initials.charCodeAt(0) || 0) + (initials.charCodeAt(1) || 0);
+            return colors[charCode % colors.length];
+        }
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Render all data that isn't view-dependent first
+            renderPatientList();
+            renderTeamDirectory();
+
+            // Set the default view (which will also trigger its specific render function)
+            showView(appState.currentView);
+            
+            // Pre-select a patient if one is set
+            if (appState.selectedPatientId) {
+                selectPatient(appState.selectedPatientId, false);
+            }
+        });
+
+    </script>
+</body>
+</html>
